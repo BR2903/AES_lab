@@ -7,20 +7,14 @@ RCON = [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36,
 
 
 def _rot_word(w):
-    """Rota una palabra de 4 bytes una posicion a la izquierda: [a,b,c,d]->[b,c,d,a]."""
     return w[1:] + w[:1]
 
 
 def _sub_word(w):
-    """Aplica la S-box a cada uno de los 4 bytes de la palabra."""
     return [SBOX[b] for b in w]
 
 
 def key_expansion(key):
-    """Expande la llave (16, 24 o 32 bytes) en round keys de 16 bytes.
-
-    Devuelve (round_keys, Nr) donde round_keys es una lista de bytearrays de 16.
-    """
     Nk = len(key) // 4                 # 4, 6 u 8 palabras
     Nr = {4: 10, 6: 12, 8: 14}[Nk]     # rounds segun el tamano
 

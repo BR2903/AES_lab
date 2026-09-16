@@ -3,44 +3,30 @@ from aes.sbox import SBOX, INV_SBOX
 
 
 def bytes_to_state(data16):
-    """Convierte 16 bytes en un state (bytearray plano por columnas).
-
-    Como los datos ya vienen en el orden r+4*c que AES usa, esto es una
-    copia directa a bytearray. Se hace explicito para dejar clara la conancion.
-    """
     assert len(data16) == 16
     return bytearray(data16)
 
 
 def state_to_bytes(state):
-    """Convierte el state de vuelta a bytes (mismo orden por columnas)."""
     return bytes(state)
 
 
 def print_state(state):
-    """Imprime el state como matriz 4x4 en hex, para depurar.
-
-    Recorre por filas (r) y dentro de cada fila por columnas (c),
-    leyendo el indice r+4*c.
-    """
     for r in range(4):
         print(" ".join(f"{state[r + 4*c]:02x}" for c in range(4)))
 
 
 def sub_bytes(state):
-    """Reemplaza cada byte del state por SBOX[byte]."""
     for i in range(16):
         state[i] = SBOX[state[i]]
 
 
 def inv_sub_bytes(state):
-    """Reemplaza cada byte del state por INV_SBOX[byte]."""
     for i in range(16):
         state[i] = INV_SBOX[state[i]]
 
 
 def shift_rows(state):
-    """Rota cada fila r a la izquierda r posiciones."""
     for r in range(1, 4):                      # fila 0 no se mueve
         row = [state[r + 4*c] for c in range(4)]   # leer la fila
         row = row[r:] + row[:r]                     # rotar r a la izquierda
@@ -49,7 +35,6 @@ def shift_rows(state):
 
 
 def inv_shift_rows(state):
-    """Rota cada fila r a la derecha r posiciones (inversa de shift_rows)."""
     for r in range(1, 4):
         row = [state[r + 4*c] for c in range(4)]
         row = row[-r:] + row[:-r]                   # rotar r a la derecha
@@ -58,7 +43,6 @@ def inv_shift_rows(state):
 
 
 def mix_columns(state):
-    """Multiplica cada columna por la matriz fija de MixColumns en GF(2^8)."""
     for c in range(4):
         i = 4 * c
         s0, s1, s2, s3 = state[i], state[i+1], state[i+2], state[i+3]
@@ -69,7 +53,6 @@ def mix_columns(state):
 
 
 def inv_mix_columns(state):
-    """Multiplica cada columna por la matriz inversa de MixColumns."""
     for c in range(4):
         i = 4 * c
         s0, s1, s2, s3 = state[i], state[i+1], state[i+2], state[i+3]
@@ -80,6 +63,5 @@ def inv_mix_columns(state):
 
 
 def add_round_key(state, round_key):
-    """XOR posicion a posicion del state con la round key (16 bytes)."""
     for i in range(16):
         state[i] ^= round_key[i]
