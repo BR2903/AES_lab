@@ -28,8 +28,8 @@ htmlcov/
 Thumbs.db
 
 # Benchmark-generated data (can be large)
-results/*
-!results/.gitkeep
+results/*.bin
+results/*.dat
 benchmark/data/
 *.bin
 *.dat

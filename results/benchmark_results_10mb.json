@@ -1,0 +1,29 @@
+[
+  {
+    "version": 128,
+    "size_mb": 10.0,
+    "repeats": 1,
+    "avg_encrypt_time_s": 123.58864639999229,
+    "avg_decrypt_time_s": 340.8191506000003,
+    "encrypt_throughput_mbps": 0.0809135813951323,
+    "decrypt_throughput_mbps": 0.029341074239506045
+  },
+  {
+    "version": 192,
+    "size_mb": 10.0,
+    "repeats": 1,
+    "avg_encrypt_time_s": 151.56050269999832,
+    "avg_decrypt_time_s": 461.92507759999717,
+    "encrypt_throughput_mbps": 0.06598025093512777,
+    "decrypt_throughput_mbps": 0.021648532380957836
+  },
+  {
+    "version": 256,
+    "size_mb": 10.0,
+    "repeats": 1,
+    "avg_encrypt_time_s": 188.76280439998663,
+    "avg_decrypt_time_s": 487.0989255000022,
+    "encrypt_throughput_mbps": 0.052976538634222095,
+    "decrypt_throughput_mbps": 0.02052971065320068
+  }
+]
