@@ -12,9 +12,12 @@ from aes.transforms import (
 )
 
 
-def encrypt_block(plaintext16, key):
-    """Cifra un bloque de 16 bytes con la llave dada (16/24/32 bytes)."""
-    round_keys, Nr = key_expansion(key)
+def encrypt_block_with_keys(plaintext16, round_keys, Nr):
+    """Cifra un bloque de 16 bytes usando round keys YA expandidas.
+
+    No re-expande la llave: recibe round_keys y Nr como parametros. Esta es la
+    variante que usa el benchmark para no recomputar el key schedule por bloque.
+    """
     state = bytes_to_state(plaintext16)
 
     add_round_key(state, round_keys[0])              # AddRoundKey inicial
@@ -32,9 +35,11 @@ def encrypt_block(plaintext16, key):
     return state_to_bytes(state)
 
 
-def decrypt_block(ciphertext16, key):
-    """Descifra un bloque de 16 bytes (inversa exacta de encrypt_block)."""
-    round_keys, Nr = key_expansion(key)
+def decrypt_block_with_keys(ciphertext16, round_keys, Nr):
+    """Descifra un bloque de 16 bytes usando round keys YA expandidas.
+
+    Inversa exacta de encrypt_block_with_keys. No re-expande la llave.
+    """
     state = bytes_to_state(ciphertext16)
 
     add_round_key(state, round_keys[Nr])             # deshacer round final
@@ -50,3 +55,20 @@ def decrypt_block(ciphertext16, key):
     add_round_key(state, round_keys[0])              # deshacer AddRoundKey inicial
 
     return state_to_bytes(state)
+
+
+def encrypt_block(plaintext16, key):
+    """Cifra un bloque de 16 bytes con la llave dada (16/24/32 bytes).
+
+    Expande la llave una vez y delega en encrypt_block_with_keys. Para cifrar
+    muchos bloques con la misma llave, expande con key_expansion una sola vez
+    y usa encrypt_block_with_keys directamente (evita re-expandir por bloque).
+    """
+    round_keys, Nr = key_expansion(key)
+    return encrypt_block_with_keys(plaintext16, round_keys, Nr)
+
+
+def decrypt_block(ciphertext16, key):
+    """Descifra un bloque de 16 bytes (inversa exacta de encrypt_block)."""
+    round_keys, Nr = key_expansion(key)
+    return decrypt_block_with_keys(ciphertext16, round_keys, Nr)
